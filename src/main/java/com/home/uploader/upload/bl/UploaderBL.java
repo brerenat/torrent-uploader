@@ -1,11 +1,14 @@
 package com.home.uploader.upload.bl;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,29 +31,38 @@ public class UploaderBL extends AbstractUploader {
 			torrentDir += File.separator;
 		}
 		LOG.info("TorrentDir :" + torrentDir);
-		final File file = new File(torrentDir + uploadedFile.getName() + ".tmp");
-		if (!file.exists()) {
-			LOG.info("File Doesn't Exist");
-			
-			final ByteArrayInputStream bis = new ByteArrayInputStream(uploadedFile.getFile());
-			
-			try {
-				IOUtils.copy(bis, new FileOutputStream(file));
+		
+		try {
+			Path path = Paths.get(torrentDir + uploadedFile.getName() + ".tmp");
+	        
+			if (!Files.exists(path)) {
+	        	Files.createFile(path);
+				LOG.info("File Doesn't Exist");
 				
-				file.renameTo(new File(torrentDir + uploadedFile.getName()));
+				final Set<PosixFilePermission> perms = Files.readAttributes(path, PosixFileAttributes.class).permissions();
 				
-				file.setExecutable(true, false);
-				file.setWritable(true, false);
-				file.setReadable(true, false);
-				LOG.info(file.getAbsolutePath());
+		        perms.add(PosixFilePermission.OWNER_WRITE);
+		        perms.add(PosixFilePermission.OWNER_READ);
+		        perms.add(PosixFilePermission.OWNER_EXECUTE);
+		        perms.add(PosixFilePermission.GROUP_WRITE);
+		        perms.add(PosixFilePermission.GROUP_READ);
+		        perms.add(PosixFilePermission.GROUP_EXECUTE);
+		        perms.add(PosixFilePermission.OTHERS_WRITE);
+		        perms.add(PosixFilePermission.OTHERS_READ);
+		        perms.add(PosixFilePermission.OTHERS_EXECUTE);
+		        Files.setPosixFilePermissions(path, perms);
+		        
+		        Files.write(path, uploadedFile.getFile());
+				
+		        LOG.info("Finished Writting file :" + path.toAbsolutePath().normalize().toString());
 				LOG.info("Finished Saving File");
-			} catch (IOException e) {
-				LOG.error("IOException when copying uploaded file to " + file.getAbsolutePath(), e);
-				throw new UploadException("IOException when copying uploaded file to " + file.getAbsolutePath(), e);
+			} else {
+				LOG.error("File " + path.toAbsolutePath().normalize().toString() + " Already exists");
+				throw new UploadException("File " + path.toAbsolutePath().normalize().toString() + " Already exists");
 			}
-		} else {
-			LOG.error("File " + file.getAbsolutePath() + " Already exists");
-			throw new UploadException("File " + file.getAbsolutePath() + " Already exists");
+		} catch (IOException e) {
+			LOG.error("IOException when copying uploaded file to " + torrentDir + uploadedFile.getName() + ".tmp", e);
+			throw new UploadException("IOException when copying uploaded file to " + torrentDir + uploadedFile.getName() + ".tmp", e);
 		}
 	}
 	
