@@ -28,7 +28,7 @@ public class UploaderBL extends AbstractUploader {
 			torrentDir += File.separator;
 		}
 		LOG.info("TorrentDir :" + torrentDir);
-		final File file = new File(torrentDir + uploadedFile.getName());
+		final File file = new File(torrentDir + uploadedFile.getName() + ".tmp");
 		if (!file.exists()) {
 			LOG.info("File Doesn't Exist");
 			file.setExecutable(true, false);
@@ -39,6 +39,8 @@ public class UploaderBL extends AbstractUploader {
 			
 			try {
 				IOUtils.copy(bis, new FileOutputStream(file));
+				
+				file.renameTo(new File(torrentDir + uploadedFile.getName()));
 				
 				LOG.info(file.getAbsolutePath());
 				LOG.info("Finished Saving File");
