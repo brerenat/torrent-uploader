@@ -31,9 +31,6 @@ public class UploaderBL extends AbstractUploader {
 		final File file = new File(torrentDir + uploadedFile.getName() + ".tmp");
 		if (!file.exists()) {
 			LOG.info("File Doesn't Exist");
-			file.setExecutable(true, false);
-			file.setWritable(true, false);
-			file.setReadable(true, false);
 			
 			final ByteArrayInputStream bis = new ByteArrayInputStream(uploadedFile.getFile());
 			
@@ -42,6 +39,9 @@ public class UploaderBL extends AbstractUploader {
 				
 				file.renameTo(new File(torrentDir + uploadedFile.getName()));
 				
+				file.setExecutable(true, false);
+				file.setWritable(true, false);
+				file.setReadable(true, false);
 				LOG.info(file.getAbsolutePath());
 				LOG.info("Finished Saving File");
 			} catch (IOException e) {
