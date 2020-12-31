@@ -53,8 +53,12 @@ public class UploaderBL extends AbstractUploader {
 		        Files.setPosixFilePermissions(path, perms);
 		        
 		        Files.write(path, uploadedFile.getFile());
+		        
+		        Path newPath = Paths.get(torrentDir + uploadedFile.getName());
+		        
+		        Files.move(path, newPath);
 				
-		        LOG.info("Finished Writting file :" + path.toAbsolutePath().normalize().toString());
+		        LOG.info("Finished Writting file :" + newPath.toAbsolutePath().normalize().toString());
 				LOG.info("Finished Saving File");
 			} else {
 				LOG.error("File " + path.toAbsolutePath().normalize().toString() + " Already exists");
