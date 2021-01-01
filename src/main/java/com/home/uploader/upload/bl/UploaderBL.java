@@ -2,6 +2,7 @@ package com.home.uploader.upload.bl;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,38 +21,40 @@ public class UploaderBL extends AbstractUploader {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UploaderBL.class);
 
+	/**
+	 * 
+	 * @param uploadedFile
+	 * @throws UploadException
+	 */
 	public void saveTorrentFile(final FileUpload uploadedFile) throws UploadException {
 		
 		LOG.info("Name :" + uploadedFile.getName());
 		LOG.info("File Size :" + uploadedFile.getFile().length);
 		
-		String torrentDir = ReferenceData.findWithName(getEM(), "Torrent Dir").getValue();
-		LOG.info("TorrentDir :" + torrentDir);
-		if (!torrentDir.endsWith(File.separator)) {
-			torrentDir += File.separator;
-		}
-		LOG.info("TorrentDir :" + torrentDir);
+		final String torrentDir = getTorrentDir();
 		
 		try {
-			Path path = Paths.get(torrentDir + uploadedFile.getName() + ".tmp");
+			Path path = Paths.get(torrentDir, uploadedFile.getName() + ".tmp");
 	        
 			if (!Files.exists(path)) {
 	        	Files.createFile(path);
 				LOG.info("File Doesn't Exist");
 				
-				final Set<PosixFilePermission> perms = Files.readAttributes(path, PosixFileAttributes.class).permissions();
+				if (FileSystems.getDefault().supportedFileAttributeViews().contains("posix")) {
+					final Set<PosixFilePermission> perms = Files.readAttributes(path, PosixFileAttributes.class).permissions();
+					
+			        perms.add(PosixFilePermission.OWNER_WRITE);
+			        perms.add(PosixFilePermission.OWNER_READ);
+			        perms.add(PosixFilePermission.OWNER_EXECUTE);
+			        perms.add(PosixFilePermission.GROUP_WRITE);
+			        perms.add(PosixFilePermission.GROUP_READ);
+			        perms.add(PosixFilePermission.GROUP_EXECUTE);
+			        perms.add(PosixFilePermission.OTHERS_WRITE);
+			        perms.add(PosixFilePermission.OTHERS_READ);
+			        perms.add(PosixFilePermission.OTHERS_EXECUTE);
+			        Files.setPosixFilePermissions(path, perms);
+				}
 				
-		        perms.add(PosixFilePermission.OWNER_WRITE);
-		        perms.add(PosixFilePermission.OWNER_READ);
-		        perms.add(PosixFilePermission.OWNER_EXECUTE);
-		        perms.add(PosixFilePermission.GROUP_WRITE);
-		        perms.add(PosixFilePermission.GROUP_READ);
-		        perms.add(PosixFilePermission.GROUP_EXECUTE);
-		        perms.add(PosixFilePermission.OTHERS_WRITE);
-		        perms.add(PosixFilePermission.OTHERS_READ);
-		        perms.add(PosixFilePermission.OTHERS_EXECUTE);
-		        Files.setPosixFilePermissions(path, perms);
-		        
 		        Files.write(path, uploadedFile.getFile());
 		        
 		        Path newPath = Paths.get(torrentDir + uploadedFile.getName());
@@ -68,6 +71,16 @@ public class UploaderBL extends AbstractUploader {
 			LOG.error("IOException when copying uploaded file to " + torrentDir + uploadedFile.getName() + ".tmp", e);
 			throw new UploadException("IOException when copying uploaded file to " + torrentDir + uploadedFile.getName() + ".tmp", e);
 		}
+	}
+	
+	private String getTorrentDir() {
+		String torrentDir = ReferenceData.findWithName(getEM(), "Torrent Dir").getValue();
+		LOG.info("TorrentDir :" + torrentDir);
+		if (!torrentDir.endsWith(File.separator)) {
+			torrentDir += File.separator;
+		}
+		LOG.info("TorrentDir :" + torrentDir);
+		return torrentDir;
 	}
 	
 }
