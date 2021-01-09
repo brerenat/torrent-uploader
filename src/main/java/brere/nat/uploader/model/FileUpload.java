@@ -1,4 +1,4 @@
-package com.home.uploader.model;
+package brere.nat.uploader.model;
 
 public class FileUpload {
 

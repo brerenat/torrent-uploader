@@ -1,4 +1,4 @@
-package com.home.uploader.upload;
+package brere.nat.uploader.upload;
 
 import java.util.List;
 
@@ -7,9 +7,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.home.mydb.model.ProcessedFile;
-import com.home.uploader.AbstractUploader;
-import com.home.uploader.upload.bl.FilesBL;
+import brere.nat.mydb.model.ProcessedFile;
+import brere.nat.uploader.AbstractUploader;
+import brere.nat.uploader.upload.bl.FilesBL;
 
 @Path("/Files")
 public class Files extends AbstractUploader {

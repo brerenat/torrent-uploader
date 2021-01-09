@@ -1,4 +1,4 @@
-package com.home.uploader.upload.bl;
+package brere.nat.uploader.upload.bl;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,11 +13,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.home.mydb.model.ReferenceData;
-import com.home.uploader.AbstractUploader;
-import com.home.uploader.model.FileUpload;
+import brere.nat.mydb.model.ReferenceData;
+import brere.nat.uploader.AbstractUploaderBL;
+import brere.nat.uploader.model.FileUpload;
 
-public class UploaderBL extends AbstractUploader {
+public class UploaderBL extends AbstractUploaderBL {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UploaderBL.class);
 
@@ -74,7 +74,8 @@ public class UploaderBL extends AbstractUploader {
 	}
 	
 	private String getTorrentDir() {
-		String torrentDir = ReferenceData.findWithName(getEM(), "Torrent Dir").getValue();
+		getEM();
+		String torrentDir = ReferenceData.Queries.findWithName("Torrent Dir").getValue();
 		LOG.info("TorrentDir :" + torrentDir);
 		if (!torrentDir.endsWith(File.separator)) {
 			torrentDir += File.separator;

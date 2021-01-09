@@ -1,4 +1,4 @@
-package com.home.uploader.upload;
+package brere.nat.uploader.upload;
 
 import java.util.List;
 
@@ -15,10 +15,10 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.home.uploader.AbstractUploader;
-import com.home.uploader.model.FileUpload;
-import com.home.uploader.upload.bl.UploadException;
-import com.home.uploader.upload.bl.UploaderBL;
+import brere.nat.uploader.AbstractUploader;
+import brere.nat.uploader.model.FileUpload;
+import brere.nat.uploader.upload.bl.UploadException;
+import brere.nat.uploader.upload.bl.UploaderBL;
 
 @Path("/Uploader")
 public class Uploader extends AbstractUploader {

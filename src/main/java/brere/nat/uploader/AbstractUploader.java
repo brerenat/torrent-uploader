@@ -1,4 +1,4 @@
-package com.home.uploader;
+package brere.nat.uploader;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -8,9 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
@@ -20,8 +17,6 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.home.mydb.utils.ProcessUtils;
 
 public abstract class AbstractUploader {
 	
@@ -41,18 +36,6 @@ public abstract class AbstractUploader {
 	@Context
 	protected HttpServletRequest request;
 
-	/**
-	 * 
-	 * @return
-	 */
-	public EntityManager getEM() {
-		if (ProcessUtils.getEm() == null) {
-			EntityManagerFactory factory = Persistence.createEntityManagerFactory("torrentmover");
-			ProcessUtils.setEm(factory.createEntityManager());
-		}
-		return ProcessUtils.getEm();
-	}
-	
 	/**
 	 * 
 	 * @return
