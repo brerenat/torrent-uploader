@@ -14,9 +14,9 @@ public abstract class AbstractUploaderBL {
 	 * @return
 	 */
 	public EntityManager getEM() {
-		if (ProcessUtils.getEm() == null) {
+		if (ProcessUtils.getEmf() == null) {
 			EntityManagerFactory factory = Persistence.createEntityManagerFactory("torrentmover");
-			ProcessUtils.setEm(factory.createEntityManager());
+			ProcessUtils.setEmf(factory);
 		}
 		return ProcessUtils.getEm();
 	}
