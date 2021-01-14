@@ -8,7 +8,6 @@ import brere.nat.mydb.utils.ProcessUtils;
 
 public abstract class AbstractUploaderBL {
 
-	
 	/**
 	 * 
 	 * @return
