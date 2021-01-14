@@ -1,5 +1,7 @@
 package brere.nat.uploader.upload;
 
+import java.io.IOException;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -17,7 +19,7 @@ public class Tracker extends AbstractUploader {
 	@POST
 	@Path("/insertNewTrackingSeries")
 	@Consumes({MediaType.APPLICATION_JSON})
-	public void insertNewTrackingSeries(final AutoPollSeries aps) {
+	public void insertNewTrackingSeries(final AutoPollSeries aps) throws IOException {
 		BL.insertNewTrackingSeries(aps);
 	}
 }
