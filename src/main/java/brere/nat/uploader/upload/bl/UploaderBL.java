@@ -10,6 +10,8 @@ import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
 
+import javax.persistence.TypedQuery;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +77,11 @@ public class UploaderBL extends AbstractUploaderBL {
 	
 	private String getTorrentDir() {
 		getEM();
-		String torrentDir = ReferenceData.Queries.findWithName("Torrent Dir").getValue();
+		
+		final TypedQuery<ReferenceData> findWithName = getEM().createNamedQuery("ReferenceData_findWithName", ReferenceData.class);
+		findWithName.setParameter("name", "Torrent Dir");
+		
+		String torrentDir = findWithName.getSingleResult().getValue();
 		LOG.info("TorrentDir :" + torrentDir);
 		if (!torrentDir.endsWith(File.separator)) {
 			torrentDir += File.separator;
