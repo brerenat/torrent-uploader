@@ -1,6 +1,5 @@
 package brere.nat.uploader.upload.bl;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -10,12 +9,9 @@ import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
 
-import javax.persistence.TypedQuery;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import brere.nat.mydb.model.ReferenceData;
 import brere.nat.uploader.AbstractUploaderBL;
 import brere.nat.uploader.model.FileUpload;
 
@@ -33,7 +29,7 @@ public class UploaderBL extends AbstractUploaderBL {
 		LOG.info("Name :" + uploadedFile.getName());
 		LOG.info("File Size :" + uploadedFile.getFile().length);
 		
-		final String torrentDir = getTorrentDir();
+		final String torrentDir = getReferenceData("Torrent Dir");
 		
 		try {
 			Path path = Paths.get(torrentDir, uploadedFile.getName() + ".tmp");
@@ -73,21 +69,6 @@ public class UploaderBL extends AbstractUploaderBL {
 			LOG.error("IOException when copying uploaded file to " + torrentDir + uploadedFile.getName() + ".tmp", e);
 			throw new UploadException("IOException when copying uploaded file to " + torrentDir + uploadedFile.getName() + ".tmp", e);
 		}
-	}
-	
-	private String getTorrentDir() {
-		getEM();
-		
-		final TypedQuery<ReferenceData> findWithName = getEM().createNamedQuery("ReferenceData_findWithName", ReferenceData.class);
-		findWithName.setParameter("name", "Torrent Dir");
-		
-		String torrentDir = findWithName.getSingleResult().getValue();
-		LOG.info("TorrentDir :" + torrentDir);
-		if (!torrentDir.endsWith(File.separator)) {
-			torrentDir += File.separator;
-		}
-		LOG.info("TorrentDir :" + torrentDir);
-		return torrentDir;
 	}
 	
 }
