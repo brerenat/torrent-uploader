@@ -17,6 +17,7 @@ import brere.nat.uploader.AbstractUploaderBL;
 public class TrackerBL extends AbstractUploaderBL {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(TrackerBL.class);
+	private static final String ILLEGAL = "(<)|(>)|(:)|(\\\")|(\\/)|(\\|)|(\\?)|(\\*)";
 	
 	public void insertNewTrackingSeries(final AutoPollSeries autoPoll) throws IOException {
 		final EntityManager em = getEM();
@@ -24,17 +25,22 @@ public class TrackerBL extends AbstractUploaderBL {
 		
 		final String seriesDir = getReferenceData("Series Dir");
 		
+		final String folderName;
+		folderName = autoPoll.getTitle().replaceAll(ILLEGAL, "");
+		
+		
 		LOG.info("Series Dir :" + seriesDir);
 		
 		final StringBuilder builder = new StringBuilder(seriesDir);
 		if (!seriesDir.endsWith(File.separator)) {
 			builder.append(File.separator);
 		}
-		builder.append(autoPoll.getTitle());
+		builder.append(folderName);
 		
 		autoPoll.setFolderName(builder.toString());
 		
 		transaction.begin();
+		em.flush();
 		em.persist(autoPoll);
 		transaction.commit();
 		em.close();
@@ -47,6 +53,7 @@ public class TrackerBL extends AbstractUploaderBL {
 		final EntityManager em = getEM();
 		final EntityTransaction transaction = em.getTransaction();
 		transaction.begin();
+		em.flush();
 		final TypedQuery<AutoPollSeries> query;
 		if (search != null) {
 			if (sorting != null) {
@@ -76,6 +83,7 @@ public class TrackerBL extends AbstractUploaderBL {
 		final EntityManager em = getEM();
 		final EntityTransaction transaction = em.getTransaction();
 		transaction.begin();
+		em.flush();
 		final TypedQuery<Long> query;
 		if (search != null) {
 			query = em.createNamedQuery("AutoPollSeries_countSearch", Long.class);
@@ -94,6 +102,7 @@ public class TrackerBL extends AbstractUploaderBL {
 		final EntityManager em = getEM();
 		final EntityTransaction transaction = em.getTransaction();
 		transaction.begin();
+		em.flush();
 		final TypedQuery<AutoPollSeries> query = em.createNamedQuery("AutoPollSeries_getByID", AutoPollSeries.class);
 		query.setParameter("id", aps.getId());
 		
