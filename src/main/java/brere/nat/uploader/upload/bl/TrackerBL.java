@@ -18,6 +18,7 @@ public class TrackerBL extends AbstractUploaderBL {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(TrackerBL.class);
 	private static final String ILLEGAL = "(<)|(>)|(:)|(\\\")|(\\/)|(\\|)|(\\?)|(\\*)";
+	private static final String AMP = "&";
 	
 	public void insertNewTrackingSeries(final AutoPollSeries autoPoll) throws IOException {
 		final EntityManager em = getEM();
@@ -25,8 +26,7 @@ public class TrackerBL extends AbstractUploaderBL {
 		
 		final String seriesDir = getReferenceData("Series Dir");
 		
-		final String folderName;
-		folderName = autoPoll.getTitle().replaceAll(ILLEGAL, "");
+		final String folderName = autoPoll.getTitle().replaceAll(ILLEGAL, "").replaceAll(AMP, "and");
 		
 		
 		LOG.info("Series Dir :" + seriesDir);
