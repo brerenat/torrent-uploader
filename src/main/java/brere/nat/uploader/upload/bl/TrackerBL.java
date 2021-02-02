@@ -57,16 +57,16 @@ public class TrackerBL extends AbstractUploaderBL {
 		final TypedQuery<AutoPollSeries> query;
 		if (search != null) {
 			if (sorting != null) {
-				query = em.createNamedQuery("AutoPollSeries_getAllSearchSorted", AutoPollSeries.class);
+				query = em.createNamedQuery("AutoPollSeries.getAllSearchSorted", AutoPollSeries.class);
 			} else {
-				query = em.createNamedQuery("AutoPollSeries_getAllSearch", AutoPollSeries.class);
+				query = em.createNamedQuery("AutoPollSeries.getAllSearch", AutoPollSeries.class);
 			}
 			query.setParameter("title", "%" + search + "%");
 		} else {
 			if (sorting != null) {
-				query = em.createNamedQuery("AutoPollSeries_getAllSorted", AutoPollSeries.class);
+				query = em.createNamedQuery("AutoPollSeries.getAllSorted", AutoPollSeries.class);
 			} else {
-				query = em.createNamedQuery("AutoPollSeries_getAll", AutoPollSeries.class);
+				query = em.createNamedQuery("AutoPollSeries.getAll", AutoPollSeries.class);
 			}
 		}
 		
@@ -86,10 +86,10 @@ public class TrackerBL extends AbstractUploaderBL {
 		em.flush();
 		final TypedQuery<Long> query;
 		if (search != null) {
-			query = em.createNamedQuery("AutoPollSeries_countSearch", Long.class);
+			query = em.createNamedQuery("AutoPollSeries.countSearch", Long.class);
 			query.setParameter("title", "%" + search + "%");
 		} else {
-			query = em.createNamedQuery("AutoPollSeries_countAll", Long.class);
+			query = em.createNamedQuery("AutoPollSeries.countAll", Long.class);
 		}
 		
 		Long singleResult = query.getSingleResult();
@@ -103,7 +103,7 @@ public class TrackerBL extends AbstractUploaderBL {
 		final EntityTransaction transaction = em.getTransaction();
 		transaction.begin();
 		em.flush();
-		final TypedQuery<AutoPollSeries> query = em.createNamedQuery("AutoPollSeries_getByID", AutoPollSeries.class);
+		final TypedQuery<AutoPollSeries> query = em.createNamedQuery("AutoPollSeries.getByID", AutoPollSeries.class);
 		query.setParameter("id", aps.getId());
 		
 		final AutoPollSeries item = query.getSingleResult();

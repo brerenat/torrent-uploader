@@ -11,7 +11,7 @@ public class FilesBL extends AbstractUploaderBL {
 
 	public List<ProcessedFile> getFiles() {
 		getEM();
-		final TypedQuery<ProcessedFile> getAll = getEM().createNamedQuery("ProcessedFile_getAll", ProcessedFile.class);
+		final TypedQuery<ProcessedFile> getAll = getEM().createNamedQuery("ProcessedFile.getAll", ProcessedFile.class);
 		
 		return getAll.getResultList();
 	}

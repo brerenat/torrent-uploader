@@ -32,7 +32,7 @@ public abstract class AbstractUploaderBL {
 	protected String getReferenceData(final String name) {
 		getEM();
 		
-		final TypedQuery<ReferenceData> findWithName = getEM().createNamedQuery("ReferenceData_findWithName", ReferenceData.class);
+		final TypedQuery<ReferenceData> findWithName = getEM().createNamedQuery("ReferenceData.findWithName", ReferenceData.class);
 		findWithName.setParameter("name", name);
 		
 		String torrentDir = findWithName.getSingleResult().getValue();
