@@ -14,8 +14,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<jersey2.version>2.19</jersey2.version>
 		<jaxrs.version>2.0.1</jaxrs.version>
 	</properties>
@@ -116,7 +116,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>ROOT</finalName>
+		<finalName>torrent-uploader</finalName>
 		<pluginManagement><!-- lock down plugins versions to avoid using Maven 
 				defaults (may be moved to parent pom) -->
 			<plugins>
@@ -171,4 +171,18 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	
+	<distributionManagement>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>nas.home-snapshots</name>
+			<url>http://nas.home:8081/artifactory/nas-snapshot</url>
+		</snapshotRepository>
+
+		<repository>
+			<id>releases</id>
+			<name>nas.home-releases</name>
+			<url>http://nas.home:8081/artifactory/nas-release</url>
+		</repository>
+	</distributionManagement>
 </project>
